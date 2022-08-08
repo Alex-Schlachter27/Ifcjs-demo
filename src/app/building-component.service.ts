@@ -12,9 +12,15 @@ export class BuildingComponentService {
 
   private fileContent: string = "";
 
+  public ifcApi: WebIFC.IfcAPI = new WebIFC.IfcAPI();
+  public loadedModels: number[] = [];
+  
+
   constructor(
     private _http: HttpClient
-  ) { }
+  ) { 
+    this.instantiateAPI();
+  }
 
     async readFile(): Promise<void>{
 
@@ -26,34 +32,31 @@ export class BuildingComponentService {
       
     }
 
-    async readNewFile(NewFile: any): Promise<void>{
+    private async instantiateAPI(){
 
-      const fileContent: string = await firstValueFrom(this._http.get(NewFile, {responseType: 'text'}));
+      this.ifcApi.SetWasmPath("./assets/ifcjs/");
 
-      this.fileContent = fileContent;
-      console.log("Read file content + NewFile");
-      
+      // initialize the library
+      await this.ifcApi.Init();
     }
 
 
-    async processFile(): Promise<void>{
-      
-      // initialize the API
-      const ifcApi = new WebIFC.IfcAPI();
+    public async loadFile(file: File): Promise<number>{
+      // Load model and return model ID
 
-      ifcApi.SetWasmPath("./assets/ifcjs/");
+      // Convert file into a Uunit8Array type
+      const byteArray = new Uint8Array(await this.readMyFile(file));
+      let modelID = this.ifcApi.OpenModel(byteArray);
+      this.loadedModels.push(modelID);
+      return modelID;
 
-      // initialize the library
-      await ifcApi.Init();
+    }
 
-      let modelID = ifcApi.OpenModel(new TextEncoder().encode(this.fileContent));
-
+    public async getProps(modelID: number){
       // Get props
-      const matches = await this.getPSetByName(ifcApi, modelID, "PSet_Revit_Type_Materials and Finishes")
+      const matches = await this.getPSetByName(this.ifcApi, modelID, "PSet_Revit_Type_Materials and Finishes")
 
       console.log(matches);
-
-
     }
 
     async getPSetByName(ifcApi: IfcAPI, modelID: number, pSetName: string){
@@ -63,9 +66,22 @@ export class BuildingComponentService {
       const name = allPsets.filter(item => item.Name.value == pSetName)
       const globalID = allPsets.filter(item => item)
       return [name, globalID]
+    
 
-      
+    }
 
+    private async readMyFile(file: File): Promise<any> {
+      return new Promise((resolve, reject) => {
+        // Create file reader
+        let reader = new FileReader()
+    
+        // Register event listeners
+        reader.addEventListener("loadend", (e: any) => resolve(e.target.result))
+        reader.addEventListener("error", reject)
+    
+        // Read file
+        reader.readAsArrayBuffer(file)
+      })
     }
 
 }

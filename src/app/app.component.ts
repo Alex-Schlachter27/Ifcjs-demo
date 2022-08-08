@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { BuildingComponentService } from './building-component.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -8,31 +9,29 @@ import { BuildingComponentService } from './building-component.service';
 })
 export class AppComponent {
   title = 'bsf_bygningsdelsapp';
+  fileName = '';
 
   constructor(
-    private _s: BuildingComponentService
+    private _s: BuildingComponentService,
+    private _http: HttpClient
   ){}
 
-  async getFile(){
-    await this._s.readFile();
-    await this._s.processFile();
-  }
-
-  async onIFCLoad(event: any){
-    if (event.target.files.length == 0) {
-      console.log("No file selected!");
-      return;
-    }
+  public async onIFCLoad(event: any){
     let file: File = event.target.files[0];
-    console.log("ready to read new file" + file)
+    this.fileName = file.name;
 
-    // file from browser is sent to service
-    await this._s.readNewFile(file);
-    // this.uploadFile([file]);
-    await this._s.processFile();
+    try{
+
+      // Load the file
+      const modelId = await this._s.loadFile(file);
+
+      // Get the properties
+      await this._s.getProps(modelId);
+
+    }catch(err){
+      console.log(err);
+    }
   }
-
-      
 
 }
 
