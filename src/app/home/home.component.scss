@@ -1,0 +1,21 @@
+
+#home-container {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 50px);
+  outline: none;
+}
+.card-container {
+  max-width: 600px;
+}
+.card {
+  min-width: 150px;
+  min-height: 50px;
+}
+
+.categories {
+  width: 100%;
+  margin-bottom: 10px;
+}

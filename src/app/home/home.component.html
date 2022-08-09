@@ -1,0 +1,34 @@
+<div id="home-container">
+
+    <!-- SHOW MENU -->
+    <div *ngIf="!selectedDemo" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="30px"
+        style="height: inherit;">
+
+        <h1>IFC.js Sandbox</h1>
+        <h2>Welcome to the IFC.js sandbox. Please choose a demo 😊</h2>
+
+        <!-- CATEGORIES -->
+        <mat-button-toggle-group class="categories card-container" fxLayout="row" [(ngModel)]="selectCategory">
+            <mat-button-toggle *ngFor="let cat of categories" [value]="cat" [fxFlex]="100/categories.length">{{cat}}
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <!-- Examples -->
+        <div class="card-container" fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutGap="32px"
+            fxLayoutAlign="flex-start">
+
+            <div *ngFor="let item of demos[selectCategory]" class="card" fxFlex="0 1 calc(33.3% - 32px)"
+                fxFlex.lt-md="0 1 calc(50% - 32px)" fxFlex.lt-sm="100%" fxLayout="row"
+                fxLayoutAlign="space-between center" fxLayoutGap="5px">
+
+                <button mat-stroked-button style="width: 100%;" [routerLink]="item.route">
+                    {{item.text}}
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
