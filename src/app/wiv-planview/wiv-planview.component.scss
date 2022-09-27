@@ -1,0 +1,12 @@
+#viewer-container {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 50px);
+    outline: none;
+  }
+
+  .card-container {
+    max-width: 150px;
+  }

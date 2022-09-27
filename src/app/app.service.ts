@@ -26,8 +26,12 @@ export class AppService {
     ],
     "WIV Demos": [
       {
-        text: 'Test',
-        route: '/test'
+        text: 'Planviewer',
+        route: '/wiv-planview'
+      },
+      {
+        text: 'GIS-Viewer',
+        route: '/wiv-gis'
       },
     ],
     "LDBIM Demos": [
@@ -46,7 +50,7 @@ export class AppService {
     keys.forEach((key: any) => {
       demoObject[key] = this.demos[key].sort((a: any, b: any) => a.text.localeCompare(b.text));
     });
-    
+
     return demoObject;
   }
 }

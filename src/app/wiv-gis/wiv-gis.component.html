@@ -1,0 +1,23 @@
+<div id="viewer-container">
+    <button mat-button color="primary" (click)="ifcUpload.click()">Load IFC
+    </button>
+
+    <input #ifcUpload type="file" (change)="onIFCLoad($event)" style="display:none">
+
+    <ng-container *ngIf="plans">
+        <mat-button-toggle-group class="card-container" fxLayout="column" [(ngModel)]="currentPlan">
+            <mat-button-toggle *ngFor="let plan of plans" [value]="plan" [fxFlex]="100/plans.length" (click)="showPlanView(plan)">{{plan.name}}
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <mat-button-toggle-group class="card-container" fxLayout="column" [(ngModel)]="currentPlan">
+          <mat-button-toggle *ngFor="let plan of plans" [value]="plan" [fxFlex]="100/plans.length" (click)="downloadDXF(plan)">Download DXF {{plan.name}}
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <button (click)="exitPlanView()">Exit PLanview</button>
+    </ng-container>
+
+
+
+</div>

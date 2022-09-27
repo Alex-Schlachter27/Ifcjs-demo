@@ -18,6 +18,14 @@ const routes: Routes = [
     path: 'ifc-properties',
     loadChildren: () => import('src/app/ifc-properties/ifc-properties.module').then(m => m.IfcPropertiesModule)
   },
+  {
+    path: 'wiv-planview',
+    loadChildren: () => import('src/app/wiv-planview/wiv-planview.module').then(m => m.WivPlanviewerModule)
+  },
+  {
+    path: 'wiv-gis',
+    loadChildren: () => import('src/app/wiv-gis/wiv-gis.module').then(m => m.WivGISModule)
+  },
 ];
 
 @NgModule({

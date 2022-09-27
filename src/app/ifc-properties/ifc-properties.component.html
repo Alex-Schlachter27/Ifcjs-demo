@@ -1,3 +1,10 @@
 <div class="container">
-    <p>ifc-properties works!</p>
+        <button 
+        mat-button color="primary" (click)="ifcUpload.click()">Load IFC
+        </button>
+    
+    <input #ifcUpload type="file" (change)="onIFCLoad($event)" style="display:none">
+
+    <button  (click)="getPSets()">Get PSets</button>
+
 </div>

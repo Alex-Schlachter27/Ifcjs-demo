@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { IfcAPI, IFCPROPERTYSET } from 'web-ifc';
 import * as WebIFC from "web-ifc/web-ifc-api.js";
-import { IFCPROPERTYSET } from 'web-ifc/web-ifc-api.js';
-import data from '../assets/input.json';
+import data from '../../assets/input.json';
 
 @Injectable({
   providedIn: 'root'
