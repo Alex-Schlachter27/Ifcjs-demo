@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IfcAPI } from 'web-ifc';
 import { IfcViewerAPI } from 'web-ifc-viewer';
+import { IFCLoader } from "web-ifc-three";
+import { AmbientLight, DirectionalLight, Scene } from 'three';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +10,7 @@ import { IfcViewerAPI } from 'web-ifc-viewer';
 export class ModelLoaderService {
 
   public loadedModels: number[] = [];
-  
+
 
   constructor( ) { }
 
@@ -33,14 +35,25 @@ export class ModelLoaderService {
       return new Promise((resolve, reject) => {
         // Create file reader
         let reader = new FileReader()
-    
+
         // Register event listeners
         reader.addEventListener("loadend", (e: any) => resolve(e.target.result))
         reader.addEventListener("error", reject)
-    
+
         // Read file
         reader.readAsArrayBuffer(file)
       })
+    }
+
+    loadFileWIT(scene: Scene, file: File){
+      console.log(file)
+      let model;
+      const ifcLoader = new IFCLoader();
+      ifcLoader.ifcManager.setWasmPath( 'assets/ifcjs/' );
+      ifcLoader.load(file, function ( model ) {
+        scene.add( model );
+      });
+      return model
     }
 
 }

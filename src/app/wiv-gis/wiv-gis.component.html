@@ -1,2 +1,9 @@
 
 <div id="map" class="map-container"></div>
+
+<div id="button-container">
+  <button mat-button color="primary" (click)="ifcUpload.click()">Load IFC
+  </button>
+
+  <input #ifcUpload type="file" (change)="onIFCLoad($event)" style="display:none">
+</div>
