@@ -1,0 +1,16 @@
+<div class="search-container">
+
+    <mat-form-field>
+        <mat-label>{{label}}</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (keyup.enter)="doSearch()">
+    </mat-form-field>
+
+    <button mat-mini-fab *ngIf="searchTerm" aria-label="Search" (click)="doSearch()">
+        <mat-icon>search</mat-icon>
+    </button>
+
+    <button mat-mini-fab *ngIf="!searchTerm" aria-label="Dismiss" (click)="onClose()">
+        <mat-icon>close</mat-icon>
+    </button>
+
+</div>

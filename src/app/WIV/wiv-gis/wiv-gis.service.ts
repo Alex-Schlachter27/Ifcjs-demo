@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IfcViewerAPI } from 'web-ifc-viewer';
 import * as mapboxgl from 'mapbox-gl';
-import { environment } from "../../environments/environment";
+import { environment } from "../../../environments/environment";
 import { AmbientLight, Camera, DirectionalLight, Matrix4, Scene, Vector3, WebGLRenderer } from 'three';
 import { ModelLoaderService } from 'src/services/model-loader.service';
 import { IFCLoader } from "web-ifc-three";

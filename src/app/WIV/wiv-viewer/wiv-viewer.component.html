@@ -1,0 +1,29 @@
+<div class="viewer-canvas" id="viewer-canvas">
+  <div class="button-column">
+    <button class="button" id="loader-button" mat-button color="primary" (click)="ifcUpload.click()">Load IFC
+    </button>
+
+    <button class="button" *ngIf="model" mat-button color="primary" (click)="initSimulationFromProps()">Initialize 4D
+    </button>
+  </div>
+
+
+  <input #ifcUpload type="file" accept=".ifc" (change)="onIFCLoad($event)" style="display:none">
+
+</div>
+
+
+<!-- CONTEXT MENU -->
+<ifc-viewer-context-menu
+    [menuTopLeftPosition]="contextMenuPosition"
+    [clickContext]="elementClickContext"
+    [buttonVisibility]="contextMenuButtons"
+    (onShowProperties)="showPropertiesPanel()"
+    >
+
+    <ng-container contextMenu>
+        <ng-content select="[contextMenu]"></ng-content>
+    </ng-container>
+
+</ifc-viewer-context-menu>
+

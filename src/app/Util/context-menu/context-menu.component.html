@@ -1,0 +1,18 @@
+<!-- an hidden div is created to set the position of appearance of the menu--> 
+<!-- <div style="display: hidden; position: fixed;" 
+[style.left]="menuTopLeftPosition.x" 
+[style.top]="menuTopLeftPosition.y" 
+[matMenuTriggerFor]="menu"></div>  -->
+ 
+<!-- standard material menu --> 
+<!-- <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="clickedItem('properties')">Show properties</button>
+</mat-menu> -->
+
+<button mat-button [matMenuTriggerFor]="menu" id="menuBtn" [hidden]="!displayMenuTrigger"></button>
+<mat-menu #menu="matMenu" (close)="onItemMenuClosed()">
+    <div (mouseover)="setItemMenuHover(true)" (mouseout)="setItemMenuHover(false)">
+        <button mat-menu-item (click)="clickedItem('properties')" *ngIf="buttonVisibility.showProperties">Show properties</button>
+        <ng-content select="[contextMenu]"></ng-content>
+    </div>
+</mat-menu>

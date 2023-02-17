@@ -26,6 +26,10 @@ export class AppService {
     ],
     "WIV Demos": [
       {
+        text: 'Viewer',
+        route: '/wiv-viewer'
+      },
+      {
         text: 'Planviewer',
         route: '/wiv-planview'
       },

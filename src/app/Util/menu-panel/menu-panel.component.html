@@ -1,0 +1,93 @@
+<div class="btn-container" [style.background-color]="settings.panelColor">
+
+    <!--hidden button for file upload-->
+    <input #fileUpload type="file" 
+        (change)="onFileLoad($event)" style="display:none">
+
+    <!--our custom file upload button-->
+    <button 
+        *ngIf="settings.panelButtons.uploadFile"
+        class="btn" 
+        (click)="fileUpload.click()" 
+        matTooltip="Load IFC">
+        <mat-icon>upload</mat-icon>
+    </button>
+
+    <!-- Additional content pre load -->
+    <ng-content select="[menuPreLoadContent]"></ng-content>
+
+    <!-- after model loaded -->
+    <ng-container *ngIf="modelLoaded">
+
+        <!-- set clipping plane -->
+        <!-- <button class="btn" (click)="setClippingPlane()" matTooltip="Slice model">
+            <mat-icon>cut</mat-icon>
+        </button> -->
+
+        <!-- Find by id -->
+        <button class="btn" *ngIf="settings.panelButtons.searchBar" [matMenuTriggerFor]="searchMenu" matTooltip="Find specific item">
+            <mat-icon>search</mat-icon>
+        </button>
+        <mat-menu #searchMenu="matMenu">
+            <ng-content select="[searchMenuBefore]"></ng-content>
+            <button mat-menu-item (click)="showSearchBar('globalId')">Find by GlobalId</button>
+            <button mat-menu-item (click)="showSearchBar('expressId')">Find by ExpressID</button>
+            <ng-content select="[searchMenuAfter]"></ng-content>
+        </mat-menu>   
+
+        <!-- Model overview -->
+        <button class="btn" 
+            *ngIf="settings.panelButtons.modelOverview"
+            [matMenuTriggerFor]="modelMenu" 
+            matTooltip="model overview">
+            <mat-icon>home</mat-icon>
+        </button>
+
+        <mat-menu #modelMenu="matMenu" class="menu-panel">
+            <div *ngFor="let model of models; index as i">
+                <div class="model-menu-row">
+                    <div>{{model.name}}</div>
+                    
+                    <!-- Hide Model -->
+                    <mat-icon *ngIf="model.visible" class="clickable" (click)="hideModel(i) ;$event.stopPropagation()"
+                    matTooltip="Hide model">visibility</mat-icon>
+                    <!-- Show Model -->
+                    <mat-icon *ngIf="!model.visible" class="clickable" (click)="showModel(i) ;$event.stopPropagation()"
+                    matTooltip="Hide model">visibility_off</mat-icon>
+
+                    <!-- Center Model -->
+                    <mat-icon *ngIf="model.visible" class="clickable" (click)="flyCameraToModel(i) ;$event.stopPropagation()"
+                    matTooltip="Center model">center_focus_weak</mat-icon>
+
+                    <!-- Dim model -->
+                    <mat-icon *ngIf="dimmed[i] == false" class="clickable" (click)="dimModel(i) ;$event.stopPropagation()"
+                    matTooltip="Dim model">lens_blur</mat-icon>
+
+                    <!-- Dim model -->
+                    <mat-icon *ngIf="dimmed[i] == true" class="clickable" (click)="undimModel(i) ;$event.stopPropagation()"
+                    matTooltip="Undim model">lens_blur</mat-icon>
+                  
+                </div>
+               
+            </div>
+        </mat-menu>
+
+        <!-- Unhide all -->
+        <button 
+            *ngIf="settings.panelButtons.cleanScene"
+            class="btn" 
+            (click)="cleanScene()" 
+            matTooltip="Clean scene (reset colors)">
+            <mat-icon>cleaning_services</mat-icon>
+        </button>
+
+        <!-- Additional content post load -->
+        <ng-content select="[menuPostLoadContent]"></ng-content>
+
+    </ng-container>
+
+</div>
+
+<!-- SEARCH BARS -->
+<search-bar *ngIf="showSearchByExpressId" class="search-bar" label="ExpressID" (search)="findItem($event)" (close)="closeSearchBars()"></search-bar>
+<search-bar *ngIf="showSearchByGlobalId" class="search-bar" label="GlobalId" (search)="findItem($event)" (close)="closeSearchBars()"></search-bar>

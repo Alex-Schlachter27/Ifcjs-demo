@@ -1,0 +1,23 @@
+.panel-container{
+    background-color: rgba(200,200,200,0.5);
+    padding: 5px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    font-family: Consolas,monaco,monospace;
+    max-width: 300px;
+    max-height: 80vh;
+    overflow-y: scroll;
+}
+
+.row{
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5em;
+}
+
+.title{
+    font-size: 0.6em;
+}
+
+.value{
+    font-size: 1em;
+}

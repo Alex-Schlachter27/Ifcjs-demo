@@ -1,0 +1,25 @@
+<div class="panel-container" *ngIf="propertiesSimple">
+
+    <!-- GENERAL -->
+    <div *ngFor="let key of propertyKeys" class="row">
+        <span class="title">{{key}}</span> 
+        <span class="value">{{propertiesSimple[key]["@value"] | decodeSTEP}}</span>
+    </div>
+
+    <hr>
+
+    <!-- PSETS -->
+    <ng-container *ngFor="let name of psetNames">
+
+        <!-- PSET -->
+        <span class="value">{{name}}</span>
+        <div *ngFor="let property of propertySetsSimple[name].properties" class="row">
+            <span class="title">{{property.name}}</span>
+            <span class="value">{{property.value["@value"] | decodeSTEP}}</span>
+        </div>
+        
+        <hr>
+
+    </ng-container>
+
+</div>
