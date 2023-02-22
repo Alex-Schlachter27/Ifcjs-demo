@@ -1,0 +1,11 @@
+<!-- Not working as not recognized as Angularmodule -->
+<!-- <ngx-slider [(value)]="value" [options]="options"></ngx-slider> -->
+
+<mat-slider
+    class="example-margin"
+    [disabled]="disabled"
+    [max]="max"
+    [min]="min"
+    [step]="step">
+  <input matSliderThumb [(ngModel)]="value">
+</mat-slider>

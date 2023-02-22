@@ -12,6 +12,9 @@ import { PropertyPanelComponent } from 'src/app/Util/property-panel/property-pan
 import { ContextMenuComponent } from 'src/app/Util/context-menu/context-menu.component';
 import { DecodeSTEPPipe } from 'src/app/Util/pipes/decode-step.pipe';
 import { MatMenuModule } from '@angular/material/menu';
+import {MatSliderModule} from '@angular/material/slider';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { SliderModule } from 'src/app/Util/slider/slider.module';
 
 
 
@@ -21,7 +24,7 @@ import { MatMenuModule } from '@angular/material/menu';
     ContextMenuComponent,
     PropertyPanelComponent,
     SpinnerComponent,
-    DecodeSTEPPipe
+    DecodeSTEPPipe,
   ],
   imports: [
     CommonModule,
@@ -33,10 +36,13 @@ import { MatMenuModule } from '@angular/material/menu';
         }
     ]),
     MatButtonModule,
+    MatSliderModule,
     MatIconModule,
     MatButtonToggleModule,
     FlexLayoutModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSliderModule,
+    SliderModule
  ],
 exports: [],
 providers: [],

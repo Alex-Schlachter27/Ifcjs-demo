@@ -36,6 +36,9 @@ export class WivViewerComponent implements OnInit {
   public properties?: any[] = undefined;
   public showPropertyPanel: boolean = false;
 
+  // Slider
+  public dates?: Date[]
+
   constructor(
     private _viewer: WebIfcViewerService,
     private _load: ModelLoaderService,
@@ -74,6 +77,8 @@ export class WivViewerComponent implements OnInit {
     // Set viewer behavior
 
     // On Click
+    // TO DO
+      // See MHRA lbd or component viewer how to use canvas
     window.onclick = async (ev: any) => {
       const result = await this.viewer.IFC.selector.pickIfcItem();
       if (!result) {
@@ -129,10 +134,13 @@ export class WivViewerComponent implements OnInit {
   }
 
   public async initSimulationFromProps() {
-    console.log("test")
-
     this.properties = await this._load.loadAllProperties(this.viewer, this.model, this.settings.downloadProperties)
-    console.log(JSON.stringify(this.properties).slice(0,100))
+    // console.log(JSON.stringify(this.properties).slice(0,100))
+
+    const {simulationList, dates} = this._props.getAllElementsWithStartStopDate(this.properties, "PAA_Baseline Start", "PAA_Baseline Finish");
+    console.log(simulationList)
+
+
   }
 
 
