@@ -24,6 +24,8 @@
     "@angular/router": "~13.3.0",
     "@types/mapbox-gl": "^2.7.6",
     "dxf-writer": "^1.18.2",
+    "ion-rangeslider": "^2.3.1",
+    "jquery": "^3.6.0",
     "mapbox-gl": "^2.10.0",
     "rxjs": "~7.5.0",
     "three": "^0.143.0",

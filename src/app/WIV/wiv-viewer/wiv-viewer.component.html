@@ -27,5 +27,13 @@
 
 </ifc-viewer-context-menu>
 
-<app-slider *ngIf="dates" [dates]="dates"></app-slider>
+<app-slider
+  class="slider"
+  *ngIf="dateRangeSettings"
+  [datesRange]="dateRangeSettings"
+  (onChangedDate)="highlightElementsOnDate($event)"
+  >
+</app-slider>
+
+
 

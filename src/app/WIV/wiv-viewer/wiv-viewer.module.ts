@@ -15,6 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import {MatSliderModule} from '@angular/material/slider';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { SliderModule } from 'src/app/Util/slider/slider.module';
+import { RangeSliderModule } from 'src/app/Util/range-slider/range-slider.module';
 
 
 
@@ -36,13 +37,12 @@ import { SliderModule } from 'src/app/Util/slider/slider.module';
         }
     ]),
     MatButtonModule,
-    MatSliderModule,
     MatIconModule,
     MatButtonToggleModule,
     FlexLayoutModule,
     MatMenuModule,
-    MatSliderModule,
-    SliderModule
+    SliderModule,
+    RangeSliderModule
  ],
 exports: [],
 providers: [],

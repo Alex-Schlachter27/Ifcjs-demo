@@ -87,6 +87,7 @@ export class PropertiesService {
           if(ifcJsonProps[propId].Name === stopPropName) finishProp = ifcJsonProps[propId];
           if(ifcJsonProps[propId].Name === "PAA_4D-Name") activityName = decodeString(ifcJsonProps[propId].NominalValue)
         }
+        console.log(startProp.NominalValue, finishProp.NominalValue)
         const startDate = new Date(startProp.NominalValue)
         const finishDate = new Date(finishProp.NominalValue)
 

@@ -1,11 +1,34 @@
 <!-- Not working as not recognized as Angularmodule -->
 <!-- <ngx-slider [(value)]="value" [options]="options"></ngx-slider> -->
 
-<mat-slider
-    class="example-margin"
+<!-- <mat-slider
+    style="width: 100%"
+    *ngIf="datesRange"
     [disabled]="disabled"
     [max]="max"
     [min]="min"
-    [step]="step">
-  <input matSliderThumb [(ngModel)]="value">
-</mat-slider>
+    [step]="step"
+    discrete>
+  <input matSliderThumb (input)="changedDate($event)" (valueChange)="changedDate($event)"/>
+</mat-slider> -->
+
+
+<!-- <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
+  <input matSliderThumb>
+</mat-slider> -->
+
+<!-- <range-slider
+
+    min="0"
+    max="100"
+    (onChange)="rangeSliderChanged($event, 1)">
+</range-slider> -->
+
+<range-slider
+  style="width: 100%"
+    *ngIf="datesRange"
+    [values]="datesRange.labels"
+    [from]="datesRange.fromIndex"
+    [to]="datesRange.toIndex"
+    (onChange)="rangeSliderChanged($event)">
+</range-slider>

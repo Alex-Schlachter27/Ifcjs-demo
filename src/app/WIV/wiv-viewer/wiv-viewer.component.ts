@@ -4,6 +4,7 @@ import { WebIfcViewerService } from 'src/services/web-ifc-viewer.service';
 import { PropertiesService } from '../wiv-services/properties.service';
 import { ContextMenuButtons, ElementClickEvent, ModelViewerSettings, PickedObject, XYScreenCoordinate } from '../models';
 import { IfcViewerAPI } from 'web-ifc-viewer';
+import { DatesRange, RangeSliderService } from '../wiv-services/slider.service';
 
 
 @Component({
@@ -37,12 +38,18 @@ export class WivViewerComponent implements OnInit {
   public showPropertyPanel: boolean = false;
 
   // Slider
-  public dates?: Date[]
+  public dateRangeSettings?: DatesRange;
+  public startDate?: Date;
+  public endDate?: Date;
+
+  // range slider
+  public sliderChangeRes: string = "";
 
   constructor(
     private _viewer: WebIfcViewerService,
     private _load: ModelLoaderService,
     private _props: PropertiesService,
+    private _s: RangeSliderService,
     ) {
       this.contextMenuButtons = new ContextMenuButtons()
       this.contextMenuButtons.showProperties = true;
@@ -140,7 +147,30 @@ export class WivViewerComponent implements OnInit {
     const {simulationList, dates} = this._props.getAllElementsWithStartStopDate(this.properties, "PAA_Baseline Start", "PAA_Baseline Finish");
     console.log(simulationList)
 
+    this.startDate = dates[0];
+    this.endDate = dates.slice(-1)[0];
+    console.log(this.startDate, this.endDate)
 
+    if(this.endDate && this.startDate) {
+      this.dateRangeSettings = await this.buildDateInterval(this.startDate, this.endDate);
+      console.log(this.dateRangeSettings)
+
+    }
+    else {
+      console.log("dates are not correct")
+    }
+  }
+
+  async buildDateInterval(startDate: Date, endDate: Date){
+    return await this._s.getDaysBetweenDates(startDate, endDate);
+  }
+
+  highlightElementsOnDate(currentDate: Date) {
+    console.log(currentDate)
+
+    // get all elements that are currently built
+
+    // get all elements that are already built
   }
 
 

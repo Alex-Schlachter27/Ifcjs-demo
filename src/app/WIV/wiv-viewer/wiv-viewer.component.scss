@@ -34,3 +34,12 @@
 .button{
   width: 150px;
 }
+
+.slider {
+  position: absolute;
+  bottom: 50px;
+  width: 90vw;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%)
+}

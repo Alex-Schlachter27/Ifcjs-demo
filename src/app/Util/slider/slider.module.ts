@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSliderModule } from '@angular/material/slider';
+import { RangeSliderModule } from '../range-slider/range-slider.module';
 import { SliderComponent } from './slider.component';
 
 @NgModule({
@@ -16,7 +17,8 @@ import { SliderComponent } from './slider.component';
         MatMenuModule,
         MatButtonModule,
         MatInputModule,
-        MatSliderModule
+        MatSliderModule,
+        RangeSliderModule
     ],
     exports: [SliderComponent],
     declarations: [
