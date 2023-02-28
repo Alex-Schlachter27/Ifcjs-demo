@@ -44,8 +44,6 @@ export class SliderComponent implements OnInit {
       this.min = this.datesRange!.fromIndex;
       this.max = this.datesRange!.toIndex;
     }
-    console.log(this.min, this.max, this.value)
-
   }
 
 

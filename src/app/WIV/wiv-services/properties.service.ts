@@ -93,7 +93,7 @@ export class PropertiesService {
 
         // console.log(relatedObjects, startDate, finishDate);
         for (let el of relatedObjects) {
-          simulationList.push(el, startDate, finishDate, activityName)
+          simulationList.push({expressID: el, startDate, finishDate, activityName})
           dates.push(startDate)
           dates.push(finishDate)
         }
