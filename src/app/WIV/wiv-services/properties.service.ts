@@ -49,7 +49,7 @@ export class PropertiesService {
     }
   }
 
-  getAllElementsWithStartStopDate(ifcJsonProps: any, startPropName: string, stopPropName: string,) {
+  getAllElementsWithStartStopDate(ifcJsonProps: any, startPropName: string, stopPropName: string, modelID: number) {
       console.time("processSimulationProps")
       const propValues = Object.values(ifcJsonProps);
       const allSingleValueProps = []
@@ -87,13 +87,13 @@ export class PropertiesService {
           if(ifcJsonProps[propId].Name === stopPropName) finishProp = ifcJsonProps[propId];
           if(ifcJsonProps[propId].Name === "PAA_4D-Name") activityName = decodeString(ifcJsonProps[propId].NominalValue)
         }
-        console.log(startProp.NominalValue, finishProp.NominalValue)
+        // console.log(startProp.NominalValue, finishProp.NominalValue)
         const startDate = new Date(startProp.NominalValue)
         const finishDate = new Date(finishProp.NominalValue)
 
         // console.log(relatedObjects, startDate, finishDate);
         for (let el of relatedObjects) {
-          simulationList.push({expressID: el, startDate, finishDate, activityName})
+          simulationList.push({expressID: el, startDate, finishDate, activityName, modelID})
           dates.push(startDate)
           dates.push(finishDate)
         }

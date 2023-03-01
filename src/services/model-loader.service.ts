@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { IfcAPI } from 'web-ifc';
 import { IfcViewerAPI } from 'web-ifc-viewer';
 import { IFCLoader } from "web-ifc-three";
+// import { IFCModel } from "web-ifc-three/IFC/components/IFCModel";
 import { AmbientLight, DirectionalLight, Scene } from 'three';
 import { ModelViewerSettings } from 'src/app/WIV/models';
 
@@ -12,7 +13,8 @@ export class ModelLoaderService {
 
   public viewer?: IfcViewerAPI;
 
-  public loadedModels: number[] = [];
+  public loadedModelIds: number[] = [];
+  public models: any[] = [];
 
   constructor( ) {}
 
@@ -22,7 +24,7 @@ export class ModelLoaderService {
       // Convert file into a Uunit8Array type
       const byteArray = new Uint8Array(await this.readFile(file));
       let modelID = ifcApi.OpenModel(byteArray);
-      this.loadedModels.push(modelID);
+      this.loadedModelIds.push(modelID);
       return modelID;
     }
 
@@ -35,7 +37,11 @@ export class ModelLoaderService {
       });
 
       // Load model into the current scene
-      const model = await viewer.IFC.loadIfc(file, true)
+      const model = await viewer.IFC.loadIfc(file, true);
+      // Add to array of models
+      this.models.push(model);
+
+      // Add shadow
       this.viewer.shadowDropper.renderShadow(model.modelID);
 
       let properties = undefined;
@@ -44,6 +50,14 @@ export class ModelLoaderService {
       }
 
       return {model, properties}
+    }
+
+    public getModels() {
+      return this.models;
+    }
+
+    public getModelsNumber() {
+      return this.models.length;
     }
 
     public async loadAllProperties(viewer: IfcViewerAPI, model: any, download: boolean = false){

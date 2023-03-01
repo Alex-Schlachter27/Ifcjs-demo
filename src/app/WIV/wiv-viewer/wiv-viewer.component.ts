@@ -9,12 +9,14 @@ import { Color, DoubleSide, MeshLambertMaterial } from 'three';
 
 class SimulationEl {
   expressID: number;
+  modelID: number;
   startDate: Date;
   finishDate: Date;
   activityName: string;
 
-  constructor(expressID: number, startDate: Date, finishDate: Date, activityName: string){
+  constructor(expressID: number, modelID: number, startDate: Date, finishDate: Date, activityName: string){
     this.expressID = expressID;
+    this.modelID = modelID;
     this.startDate = startDate;
     this.finishDate = finishDate;
     this.activityName = activityName;
@@ -47,11 +49,14 @@ export class WivViewerComponent implements OnInit {
 
   // Properties
   public contextMenuButtons: ContextMenuButtons
-  public properties?: any[] = undefined;
+  public propertyModelList: {[key: number]: {model: any, properties: any[]}} = {};
+  public propertyList: any[] = [];
+  public properties = [];
   public showPropertyPanel: boolean = false;
 
   // Slider
   public dateRangeSettings?: DatesRange;
+  public dates: Date[] = [];
   public startDate?: Date;
   public endDate?: Date;
 
@@ -59,10 +64,11 @@ export class WivViewerComponent implements OnInit {
   public sliderChangeRes: string = "";
 
   // Simulation
-  public simulationList?: SimulationEl[];
-  public currentElements: number[] = [];
-  public existingElements: number[] = [];
-  public hiddenElements: number[] = [];
+  // public simulationList: SimulationEl[] = [];
+  public simulationList: {[key: number]: SimulationEl[]} = {};
+  public currentElements: any[] = [];
+  public existingElements: any[] = [];
+  public hiddenElements: any[] = [];
   // public selection = [284470, 284669, 284822, 284954, 300200, 300332, 300464, 300596, 300728, 300860, 300992, 301124, 301256, 301378, 320806, 340208, 359746, 434140, 447974, 461808, 475642, 489476, 503310, 518393, 533435, 533565, 548607, 563644, 578681, 593718, 608755, 629296, 629426, 644480, 659527, 659657, 674697]
 
 
@@ -84,19 +90,16 @@ export class WivViewerComponent implements OnInit {
 
   public async onIFCLoad(event: any){
     if(!this.viewer) return
-    //TODO
-      // Only allow IFC files!
 
-    let file: File = event.target.files[0];
-    console.log(file)
-    this.fileName = file.name;
+    let files: File[] = event.target.files;
+    // console.log(files)
 
     // Load the file
-    const { model, properties } = await this._load.loadFileWIV(this.viewer, file, this.settings);
-    this.models.push(model)
-    this.model = model;
-    if (properties != undefined) this.properties = properties;
-    console.log(this.model)
+    for (let file of files) {
+      const { model, properties } = await this._load.loadFileWIV(this.viewer, file, this.settings);
+      this.models.push(model)
+    }
+
 
     this.pickingMode = true
 
@@ -107,26 +110,26 @@ export class WivViewerComponent implements OnInit {
     // On Click
     // TO DO
       // See MHRA lbd or component viewer how to use canvas
-    // window.onclick = async (ev: any) => {
-    //   if(!this.viewer) return
-    //   const result = await this.viewer.IFC.selector.pickIfcItem();
-    //   if (!result) {
-    //     console.log("unhighlight!!")
-    //     // Canvas click
-    //     this.closeContextMenu();
-    //     this.viewer.IFC.selector.unpickIfcItems();
-    //     this.viewer.IFC.selector.unHighlightIfcItems();
-    //     this.pickingMode = true;
-    //     return
-    //   };
+    window.onclick = async (ev: any) => {
+      if(!this.viewer || !this.pickingMode) return
+      const result = await this.viewer.IFC.selector.pickIfcItem();
+      if (!result) {
+        console.log("unhighlight!!")
+        // Canvas click
+        this.closeContextMenu();
+        this.viewer.IFC.selector.unpickIfcItems();
+        this.viewer.IFC.selector.unHighlightIfcItems();
+        this.pickingMode = true;
+        return
+      };
 
-    //   const { modelID, id } = result;
+      const { modelID, id } = result;
 
-    //   this.openContextMenu(ev);
+      this.openContextMenu(ev);
 
-    //   this.elementClickContext = {expressID: id, modelID: modelID, mouseEvent: ev};
-    //   // console.log(this.elementClickContext)
-    // }
+      this.elementClickContext = {expressID: id, modelID: modelID, mouseEvent: ev};
+      // console.log(this.elementClickContext)
+    }
 
     // On Mouseover
     // window.onmousemove = async (ev: any) => {
@@ -163,18 +166,31 @@ export class WivViewerComponent implements OnInit {
   }
 
   public async initSimulationFromProps() {
+    this.pickingMode = false;
+
     if(!this.viewer) return
-    this.properties = await this._load.loadAllProperties(this.viewer, this.model, this.settings.downloadProperties)
-    // console.log(JSON.stringify(this.properties).slice(0,100))
+    for (let i = 0; i < this.models.length; i++) {
 
-    // TODO: For different models
-    const {simulationList, dates} = this._props.getAllElementsWithStartStopDate(this.properties, "PAA_Baseline Start", "PAA_Baseline Finish");
-    console.log(simulationList)
+      const model = this.models[i]
+      const properties = await this._load.loadAllProperties(this.viewer, model, this.settings.downloadProperties)
+      if (properties != undefined) {
+        // this.propertyModelList[model.modelID] = { model, properties };
+        this.propertyList.push(properties)
+      }
 
-    this.simulationList = simulationList as SimulationEl[];
+      const {simulationList, dates} = this._props.getAllElementsWithStartStopDate(properties, "PAA_Baseline Start", "PAA_Baseline Finish", model.modelID);
+      // console.log(simulationList)
 
-    this.startDate = dates[0];
-    this.endDate = dates.slice(-1)[0];
+      // concat
+      this.simulationList[model.modelID] = simulationList as SimulationEl[];
+      this.dates = [...this.dates, ...dates];
+      this.dates.sort((date1, date2) => date1.valueOf() - date2.valueOf());
+    }
+
+    console.log(this.simulationList)
+
+    this.startDate = this.dates[0];
+    this.endDate = this.dates.slice(-1)[0];
     console.log(this.startDate, this.endDate)
 
     if(this.endDate && this.startDate) {
@@ -186,9 +202,11 @@ export class WivViewerComponent implements OnInit {
     }
 
     // Hide model, so subsets can be shown
-    // this.hideModel(0);
-    this.dimModel(0);
-    this.viewer.shadowDropper.deleteShadow("0");
+    for (let i = 0; i < this.models.length; i++) {
+      // this.hideModel(0);
+      this.dimModel(i);
+      this.viewer.shadowDropper.deleteShadow(i.toString());
+    }
   }
 
   async buildDateInterval(startDate: Date, endDate: Date){
@@ -201,34 +219,53 @@ export class WivViewerComponent implements OnInit {
 
     const scene = this.viewer.context.getScene();
 
-    // get all elements that are currently built and already built
-    this.currentElements = []
-    this.existingElements = []
+    // To DO:
+    // Improve to only loop over models once --> Strucutre simulationList also by models and then create subsets for each model after and add it to scene within the loop
 
-    for (let i = 0; i < this.simulationList.length; i++) {
-      const item = this.simulationList[i];
+    // create empty arrays for each model for current and existing elements --> Set empty when slider changes!
+    this.currentElements = Array(this.models.length).fill([]);
+    this.existingElements = Array(this.models.length).fill([]);
 
-      if (item.startDate <= currentDate && currentDate <= item.finishDate) {
-        // currently built
-        this.currentElements.push(item.expressID);
-      } else if (item.finishDate < currentDate) {
-        // already built
-        this.existingElements.push(item.expressID);
+    for (let i = 0; i < this.models.length; i++) {
+
+      let currentElements = [];
+      let existingElements = [];
+
+      const simulationList = this.simulationList[i];
+      for (let j = 0; j < simulationList.length; j++) {
+        const item = simulationList[j];
+        const modelID = item.modelID;
+
+        if (item.startDate <= currentDate && currentDate <= item.finishDate) {
+          // currently built
+          currentElements.push(item.expressID);
+          this.currentElements[modelID].push(item.expressID);
+          // console.log(currentDate, item, this.currentElements, this.currentElements[modelID])
+        } else if (item.finishDate < currentDate) {
+          // already built
+          existingElements.push(item.expressID);
+          this.existingElements[modelID].push(item.expressID);
+        }
+        else {
+          // built in future
+          // this.hiddenElements.push(item.expressID);
+        }
       }
-      else {
-        // built in future
-        this.hiddenElements.push(item.expressID);
-      }
+
+      const modelID = i;
+      // Show existing with grey color?
+      let exName = JSON.stringify(i) + "_existing elements";
+      const existingElementssubset = this.createSubsetOfIds(modelID, existingElements, exName, "grey");
+      // console.log(existingElementssubset)
+      if(existingElementssubset) scene.add(existingElementssubset);
+
+      // highlight
+      let curName = JSON.stringify(i) + "_current elements";
+      // const highlightedElementsSubset = this.createSubsetOfIds(modelID, currentElements, curName, "yellow", 0.5);
+      const highlightedElementsSubset = this.createSubsetOfIds(modelID, currentElements, curName, "yellow");
+      // console.log(highlightedElementsSubset)
+      if(highlightedElementsSubset) scene.add(highlightedElementsSubset);
     }
-
-    // Show existing with grey color?
-    const existingElements = this.createSubsetOfIds(0, this.existingElements, "existing elements", "grey");
-    if(existingElements) scene.add(existingElements);
-
-    // highlight
-    const highlightedElements = this.createSubsetOfIds(0, this.currentElements, "current elements", "yellow");
-    // console.log(highlightedElements)
-    if(highlightedElements) scene.add(highlightedElements);
   }
 
 
@@ -238,7 +275,7 @@ export class WivViewerComponent implements OnInit {
     return viewerApi.IFC.selector.highlight.newSelection(modelID, ids, removePrevious)
   }
 
-  createSubsetOfIds(modelID: number, ids: number[], name: string, color?: string) {
+  createSubsetOfIds(modelID: number, ids: number[], name: string, color?: string, opacity?: number) {
     if(!this.viewer) return
 
     let material = undefined
@@ -248,6 +285,10 @@ export class WivViewerComponent implements OnInit {
         depthTest: true,
         side: DoubleSide
       });
+      if(material && opacity) {
+        material.transparent = true;
+        material.opacity = opacity;
+      }
     }
 
 

@@ -3,12 +3,12 @@
     <button class="button" id="loader-button" mat-button color="primary" (click)="ifcUpload.click()">Load IFC
     </button>
 
-    <button class="button" *ngIf="model" mat-button color="primary" (click)="initSimulationFromProps()">Initialize 4D
+    <button class="button" *ngIf="models.length > 0" mat-button color="primary" (click)="initSimulationFromProps()">Initialize 4D
     </button>
   </div>
 
 
-  <input #ifcUpload type="file" accept=".ifc" (change)="onIFCLoad($event)" style="display:none">
+  <input #ifcUpload type="file" multiple="multiple" accept=".ifc" (change)="onIFCLoad($event)" style="display:none">
 
 </div>
 
