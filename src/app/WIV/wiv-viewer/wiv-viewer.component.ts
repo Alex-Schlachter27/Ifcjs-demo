@@ -2,26 +2,11 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ModelLoaderService } from 'src/services/model-loader.service';
 import { WebIfcViewerService } from 'src/services/web-ifc-viewer.service';
 import { PropertiesService } from '../wiv-services/properties.service';
-import { ContextMenuButtons, ElementClickEvent, ModelViewerSettings, PickedObject, XYScreenCoordinate } from '../models';
+import { activityType, ContextMenuButtons, ElementClickEvent, ModelViewerSettings, PickedObject, propType, schedulePropClass, SimulationEl, XYScreenCoordinate } from '../models';
 import { IfcViewerAPI } from 'web-ifc-viewer';
 import { DatesRange, RangeSliderService } from '../wiv-services/slider.service';
 import { Color, DoubleSide, MeshLambertMaterial } from 'three';
 
-class SimulationEl {
-  expressID: number;
-  modelID: number;
-  startDate: Date;
-  finishDate: Date;
-  activityName: string;
-
-  constructor(expressID: number, modelID: number, startDate: Date, finishDate: Date, activityName: string){
-    this.expressID = expressID;
-    this.modelID = modelID;
-    this.startDate = startDate;
-    this.finishDate = finishDate;
-    this.activityName = activityName;
-}
-}
 @Component({
   selector: 'app-wiv-viewer',
   templateUrl: './wiv-viewer.component.html',
@@ -69,8 +54,22 @@ export class WivViewerComponent implements OnInit {
   public currentElements: any[] = [];
   public existingElements: any[] = [];
   public hiddenElements: any[] = [];
-  // public selection = [284470, 284669, 284822, 284954, 300200, 300332, 300464, 300596, 300728, 300860, 300992, 301124, 301256, 301378, 320806, 340208, 359746, 434140, 447974, 461808, 475642, 489476, 503310, 518393, 533435, 533565, 548607, 563644, 578681, 593718, 608755, 629296, 629426, 644480, 659527, 659657, 674697]
 
+
+  public scheduleProperties = [
+    {expressID: undefined, Name: "PAA_4D-Name", value: undefined, type: propType.STRING, activityType: activityType.CONSTRUCT},
+    {expressID: undefined, Name: "PAA_4D", value: undefined, type: propType.STRING, activityType: activityType.CONSTRUCT},
+    {expressID: undefined, Name: "PAA_4D_Actual Start", value: undefined, type: propType.DATE, activityType: activityType.CONSTRUCT},
+    {expressID: undefined, Name: "PAA_4D_Actual Finish", value: undefined, type: propType.DATE, activityType: activityType.CONSTRUCT},
+    {expressID: undefined, Name: "PAA_4D_Baseline Start", value: undefined, type: propType.DATE, activityType: activityType.CONSTRUCT},
+    {expressID: undefined, Name: "PAA_4D_Baseline Finish", value: undefined, type: propType.DATE, activityType: activityType.CONSTRUCT},
+    {expressID: undefined, Name: "PAA_4D_Demolish-Name", value: undefined, type: propType.STRING, activityType: activityType.DEMOLISH},
+    {expressID: undefined, Name: "PAA_4D_Demolish", value: undefined, type: propType.STRING, activityType: activityType.DEMOLISH},
+    {expressID: undefined, Name: "PAA_4D_Actual Start Demolish", value: undefined, type: propType.DATE, activityType: activityType.DEMOLISH},
+    {expressID: undefined, Name: "PAA_4D_Actual Finish Demolish", value: undefined, type: propType.DATE, activityType: activityType.DEMOLISH},
+    {expressID: undefined, Name: "PAA_4D_Baseline Start Demolish", value: undefined, type: propType.DATE, activityType: activityType.DEMOLISH},
+    {expressID: undefined, Name: "PAA_4D_Baseline Finish Demolish", value: undefined, type: propType.DATE, activityType: activityType.DEMOLISH},
+  ]
 
   constructor(
     private _viewer: WebIfcViewerService,
@@ -178,8 +177,8 @@ export class WivViewerComponent implements OnInit {
         this.propertyList.push(properties)
       }
 
-      const {simulationList, dates} = this._props.getAllElementsWithStartStopDate(properties, "PAA_Baseline Start", "PAA_Baseline Finish", model.modelID);
-      // console.log(simulationList)
+      // const {simulationList, dates} = this._props.getAllElementsWithStartStopDate(properties, "PAA_4D_Baseline Start", "PAA_4D_Baseline Finish", model.modelID);
+      const {simulationList, dates} = this._props.getAllElementsWithScheduleProps(properties, this.scheduleProperties, model.modelID);
 
       // concat
       this.simulationList[model.modelID] = simulationList as SimulationEl[];
@@ -195,7 +194,7 @@ export class WivViewerComponent implements OnInit {
 
     if(this.endDate && this.startDate) {
       this.dateRangeSettings = await this.buildDateInterval(this.startDate, this.endDate);
-      console.log(this.dateRangeSettings)
+      // console.log(this.dateRangeSettings)
     }
     else {
       console.log("dates are not correct")
@@ -228,6 +227,14 @@ export class WivViewerComponent implements OnInit {
 
     for (let i = 0; i < this.models.length; i++) {
 
+      // Dim model
+      // this.dimModel(i);
+
+      // To DO
+      // To DO
+      // To DO
+      // Rather check current and new elements from before and from now and remove or add from subset!
+
       let currentElements = [];
       let existingElements = [];
 
@@ -235,13 +242,18 @@ export class WivViewerComponent implements OnInit {
       for (let j = 0; j < simulationList.length; j++) {
         const item = simulationList[j];
         const modelID = item.modelID;
+        const scheduleProps = item.scheduleProperties as schedulePropClass[];
 
-        if (item.startDate <= currentDate && currentDate <= item.finishDate) {
+        const startDate = scheduleProps?.filter((item:any) => item.Name === 'PAA_4D_Actual Start')[0].value as Date;
+        const finishDate = scheduleProps?.filter((item:any) => item.Name === 'PAA_4D_Actual Finish')[0].value as Date;
+        // console.log(startDate, finishDate, currentDate)
+
+        if (startDate <= currentDate && currentDate <= finishDate) {
           // currently built
           currentElements.push(item.expressID);
           this.currentElements[modelID].push(item.expressID);
           // console.log(currentDate, item, this.currentElements, this.currentElements[modelID])
-        } else if (item.finishDate < currentDate) {
+        } else if (finishDate < currentDate) {
           // already built
           existingElements.push(item.expressID);
           this.existingElements[modelID].push(item.expressID);
@@ -255,7 +267,7 @@ export class WivViewerComponent implements OnInit {
       const modelID = i;
       // Show existing with grey color?
       let exName = JSON.stringify(i) + "_existing elements";
-      const existingElementssubset = this.createSubsetOfIds(modelID, existingElements, exName, "grey");
+      const existingElementssubset = this.createSubsetOfIds(modelID, existingElements, exName, "#fcfcfc");
       // console.log(existingElementssubset)
       if(existingElementssubset) scene.add(existingElementssubset);
 

@@ -7,6 +7,66 @@ export class ModelViewerSettings{
   public downloadProperties: boolean = false;
 
 }
+
+export class SimulationEl {
+  expressID: number;
+  modelID: number;
+  scheduleProperties?: schedulePropClass[];
+
+  constructor(expressID: number, modelID: number, scheduleProperties: schedulePropClass[]){
+    this.expressID = expressID;
+    this.modelID = modelID;
+    this.scheduleProperties = scheduleProperties;
+  }
+}
+
+export class schedulePropClass {
+  expressID?: number;
+  Name?: string;
+  value?: Date | string | number;
+  type?: propType;
+  activityType?: activityType;
+}
+
+export enum propType{
+  DATE="DATE",
+  STRING="STRING",
+  ANY="ANY"
+}
+
+export enum activityType{
+  CONSTRUCT="CONSTRUCT",
+  DEMOLISH="DEMOLISH",
+}
+export class SchedulePropNames {
+  public consActivityName: string;
+  public consActivityId: string;
+  public consBaselineStart: string;
+  public consBaselineFinish: string;
+  public consActualStart?: string;
+  public consActualFinish?: string;
+  public demActivityName?: string;
+  public demActivityId?: string;
+  public demBaselineStart?: string;
+  public demBaselineFinish?: string;
+  public demActualStart?: string;
+  public demActualFinish?: string;
+
+  constructor(consActivityName: string, consActivityId: string, consBaselineStart: string, consBaselineFinish: string, consActualStart?: string, consActualFinish?: string, demActivityName?: string, demActivityId?: string, demBaselineStart?: string, demBaselineFinish?: string, demActualStart?: string, demActualFinish?: string){
+    this.consActivityId = consActivityId;
+    this.consActivityName = consActivityName;
+    this.consBaselineStart = consBaselineStart;
+    this.consBaselineFinish = consBaselineFinish;
+    this.consActualStart = consActualStart;
+    this.consActualFinish = consActualFinish;
+    this.demActivityId = demActivityId;
+    this.demActivityName = demActivityName;
+    this.demBaselineStart = demBaselineStart;
+    this.demBaselineFinish = demBaselineFinish;
+    this.demActualStart = demActualStart;
+    this.demActualFinish = demActualFinish;
+  }
+}
 // export class ModelViewerSettings{
 
 //     public panelColor: string = "DodgerBlue";
