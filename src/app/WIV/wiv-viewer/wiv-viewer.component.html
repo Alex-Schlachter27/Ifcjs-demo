@@ -1,14 +1,24 @@
 <div class="viewer-canvas" id="viewer-canvas">
-  <div class="button-column">
-    <button class="button" id="loader-button" mat-button color="primary" (click)="ifcUpload.click()">Load IFC
+  <div class="button-row">
+    <button class="button" id="loader-button" matTooltip="Load IFC models" mat-icon-button color="primary" (click)="ifcUpload.click()">
+      <mat-icon>folder</mat-icon>
     </button>
+    <input #ifcUpload type="file" multiple="multiple" accept=".ifc" (change)="onIFCLoad($event)" style="display:none">
 
-    <button class="button" *ngIf="models.length > 0" mat-button color="primary" (click)="initSimulationFromProps()">Initialize 4D
+
+    <button class="button" *ngIf="models.length > 0" matTooltip="Start 4D Simulation" mat-icon-button color="primary" (click)="initSimulationFromProps()">
+      <mat-icon>play_arrow</mat-icon>
     </button>
   </div>
 
+  <div class="toggle-column">
+    <mat-slide-toggle
+      [(ngModel)]="baselineDates">
+      Baseline Schedule ?
+    </mat-slide-toggle>
+  </div>
 
-  <input #ifcUpload type="file" multiple="multiple" accept=".ifc" (change)="onIFCLoad($event)" style="display:none">
+
 
 </div>
 

@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class BsfBuildingComponentsComponent {
 
-  title = 'bsf_bygningsdelsapp';
+  title = 'web_ifc_sandbox';
   fileName = '';
 
   constructor(

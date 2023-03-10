@@ -21,18 +21,30 @@
   overflow: hidden;
 }
 
-.button-column {
+.button-row {
   position: fixed;
-  top: 50px;
-  left: 0;
+  top: 5px;
+  left: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+}
+
+.toggle-column {
+  position: fixed;
+  top: 60px;
+  left: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
 }
 
-.button{
-  width: 150px;
+
+::ng-deep .button.mat-icon-button:hover .mat-button-focus-overlay {
+  opacity: 0.1 !important;
 }
 
 .slider {

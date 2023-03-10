@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { WivViewerComponent } from './wiv-viewer.component';
 import { SpinnerComponent } from 'src/app/Util/spinner/spinner.component';
@@ -16,6 +17,7 @@ import {MatSliderModule} from '@angular/material/slider';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { SliderModule } from 'src/app/Util/slider/slider.module';
 import { RangeSliderModule } from 'src/app/Util/range-slider/range-slider.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -39,6 +41,8 @@ import { RangeSliderModule } from 'src/app/Util/range-slider/range-slider.module
     MatButtonModule,
     MatIconModule,
     MatButtonToggleModule,
+    MatSlideToggleModule,
+    MatTooltipModule,
     FlexLayoutModule,
     MatMenuModule,
     SliderModule,
